@@ -137,7 +137,7 @@ public class Main {
             fw.close();
         } catch (IOException e) {
             // LOG: Se registra el error en lugar de ignorarlo
-            System.err.println("Error al crear AUTO_PROMPT.txt: " + e.getMessage());
+            LOGGER.severe("Error al crear AUTO_PROMPT.txt: " + e.getMessage());
         }
 
         Scanner sc = new Scanner(System.in);
