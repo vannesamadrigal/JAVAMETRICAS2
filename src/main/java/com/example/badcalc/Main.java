@@ -7,16 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
+import java.util.logging.Logger;
 public class Main {
     
+    
+    //Se agrego un logger para manejar mensajes de error 
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     // se cambia para eliminar Code Smell de ArrayList por List<String>
-    public static List<String> history = new ArrayList();
+    private static final List<String> history = new ArrayList<String>();
     public static String last = "";
     public static int counter = 0;
     public static Random R = new Random();
 
     public static String API_KEY = "NOT_SECRET_KEY";
+    
+    public static void addHistory(String value){
+        history.add(value);
+        last = value;
+        counter++;
+    }
+    
+    //Se agrego un metodo para obtener el historial
+    public static List<String> getHistory(){
+        return history;
+    }
 
     public static double parse(String s) {
         try {
@@ -83,7 +97,7 @@ public class Main {
             }
             // manejo de excepcion con mensaje corregido
         } catch (Exception e) {
-            System.err.println("Error en operación aritmética" + e.getMessage());
+            LOGGER.severe("Error en operación aritmética" + e.getMessage());
         }
 
         try {
@@ -94,7 +108,7 @@ public class Main {
             }
             // manejo de excepcion con mensaje corregido
         } catch (Exception e) {
-            System.err.println("Error en lógica aleatoria" + e.getMessage());
+            LOGGER.severe("Error en lógica aleatoria" + e.getMessage());
         }
         return 0;
     }
@@ -162,7 +176,7 @@ public class Main {
                 } catch (InterruptedException e) {
                     // RESTAURAR: Se restaura el estado de interrupción del hilo
                     Thread.currentThread().interrupt();
-                    System.err.println("Hilo interrumpido durante visualización del historial");
+                    LOGGER.severe("Hilo interrumpido durante visualización del historial");
                 }
                 continue;
             }
@@ -189,7 +203,7 @@ public class Main {
                 res = compute(a, b, op);
             } catch (Exception e) {
                 // LOG: Manejo genérico de errores en cálculo
-                System.err.println("Error en cálculo: " + e.getMessage());
+                LOGGER.severe("Error en cálculo: " + e.getMessage());
             }
 
             try {
@@ -201,11 +215,11 @@ public class Main {
                 try (FileWriter fw = new FileWriter("history.txt", true)) {
                     fw.write(line + System.lineSeparator());
                 } catch (IOException ioe) {
-                    System.err.println("Error al escribir en history.txt: " + ioe.getMessage());
+                    LOGGER.severe("Error al escribir en history.txt: " + ioe.getMessage());
                 }
             } catch (Exception e) {
                 // LOG: Error general en registro de historial
-                System.err.println("Error al registrar en historial: " + e.getMessage());
+                   LOGGER.severe("Error al registrar en historial: " + e.getMessage());
             }
 
             System.out.println("= " + res);
@@ -215,7 +229,7 @@ public class Main {
                 Thread.sleep(R.nextInt(2));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.err.println("Hilo interrumpido durante pausa aleatoria");
+                LOGGER.severe("Hilo interrumpido durante pausa aleatoria");
             }
             continue outer;
         }
@@ -225,7 +239,7 @@ public class Main {
             FileWriter fw = new FileWriter("leftover.tmp");
             fw.close();
         } catch (IOException e) {
-            System.err.println("Error al crear leftover.tmp: " + e.getMessage());
+            LOGGER.severe("Error al crear leftover.tmp: " + e.getMessage());
         }
         sc.close();
     }
